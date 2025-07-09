@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Phishing Detection</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #00ffe0;
+    }
+
+    input[type="text"] {
+      padding: 12px 16px;
+      width: 100%;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    button {
+      background: linear-gradient(to right, #00ffe0, #00b3ff);
+      color: #000;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 1.1rem;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    .safe {
+      background: #00b89433;
+      color: #00ffae;
+    }
+
+    .phishing {
+      background: #d6303133;
+      color: #ff7675;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🔍 Phishing Detection</h1>
+    <input type="text" id="urlInput" placeholder="Paste a URL here..." />
+    <button onclick="checkPhishing()">Check Now</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function checkPhishing() {
+      const url = document.getElementById("urlInput").value.trim();
+      const resultBox = document.getElementById("result");
+
+      // Simple red flag checker (placeholder logic)
+      const redFlags = ["login", "verify", "update", "secure", "account", "paypal", "bank", "@", "bit.ly", "tinyurl"];
+      const suspiciousPatterns = redFlags.some(flag => url.toLowerCase().includes(flag)) || !url.startsWith("https://");
+
+      if (!url) {
+        resultBox.textContent = "Please enter a URL.";
+        resultBox.className = "phishing";
+        resultBox.style.display = "block";
+        return;
+      }
+
+      if (suspiciousPatterns) {
+        resultBox.textContent = "⚠️ Warning: This URL shows signs of phishing.";
+        resultBox.className = "phishing";
+      } else {
+        resultBox.textContent = "✅ This URL looks safe (basic checks passed).";
+        resultBox.className = "safe";
+      }
+
+      resultBox.style.display = "block";
+    }
+  </script>
+</body>
+</html>
