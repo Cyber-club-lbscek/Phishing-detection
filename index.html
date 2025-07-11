@@ -115,22 +115,29 @@
   </div>
 
   <script>
-    function checkPhishing() {
-      const url = document.getElementById("urlInput").value.trim();
-      const resultBox = document.getElementById("result");
+  async function checkPhishing() {
+    const url = document.getElementById("urlInput").value.trim();
+    const resultBox = document.getElementById("result");
 
-      // Simple red flag checker (placeholder logic)
-      const redFlags = ["login", "verify", "update", "secure", "account", "paypal", "bank", "@", "bit.ly", "tinyurl"];
-      const suspiciousPatterns = redFlags.some(flag => url.toLowerCase().includes(flag)) || !url.startsWith("https://");
+    if (!url) {
+      resultBox.textContent = "Please enter a URL.";
+      resultBox.className = "phishing";
+      resultBox.style.display = "block";
+      return;
+    }
 
-      if (!url) {
-        resultBox.textContent = "Please enter a URL.";
-        resultBox.className = "phishing";
-        resultBox.style.display = "block";
-        return;
-      }
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/detect_phishing", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ url: url })
+      });
 
-      if (suspiciousPatterns) {
+      const data = await response.json();
+
+      if (data.phishing) {
         resultBox.textContent = "⚠️ Warning: This URL shows signs of phishing.";
         resultBox.className = "phishing";
       } else {
@@ -139,7 +146,13 @@
       }
 
       resultBox.style.display = "block";
+    } catch (error) {
+      resultBox.textContent = "❌ Error checking the URL. Please try again later.";
+      resultBox.className = "phishing";
+      resultBox.style.display = "block";
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
